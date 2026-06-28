@@ -1,0 +1,60 @@
+"""
+AgriPrice — FastAPI Backend Entry Point
+"""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+
+from app.core.config import settings
+from app.core.database import engine, Base
+from app.routers import auth, crops, prices, markets, predictions, weather, schemes, users
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: create tables (dev only — use Alembic in production)
+    if settings.APP_ENV == "development":
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    yield
+    # Shutdown
+    await engine.dispose()
+
+
+app = FastAPI(
+    title="AgriPrice API",
+    description="AI-powered agricultural market intelligence for Karnataka farmers",
+    version="1.0.0",
+    docs_url="/docs" if settings.DEBUG else None,
+    redoc_url="/redoc" if settings.DEBUG else None,
+    lifespan=lifespan,
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Routers
+app.include_router(auth.router,        prefix="/api/auth",        tags=["auth"])
+app.include_router(crops.router,       prefix="/api/crops",       tags=["crops"])
+app.include_router(prices.router,      prefix="/api/prices",      tags=["prices"])
+app.include_router(markets.router,     prefix="/api/markets",     tags=["markets"])
+app.include_router(predictions.router, prefix="/api/predictions", tags=["predictions"])
+app.include_router(weather.router,     prefix="/api/weather",     tags=["weather"])
+app.include_router(schemes.router,     prefix="/api/schemes",     tags=["schemes"])
+app.include_router(users.router,       prefix="/api/users",       tags=["users"])
+
+
+@app.get("/api/health")
+async def health():
+    return {"status": "ok", "service": "AgriPrice API", "version": "1.0.0"}
+
+
+@app.get("/")
+async def root():
+    return {"message": "AgriPrice API — Karnataka Crop Price Intelligence"}

@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-forest: #1B4332;
+    --color-forest-light: #2d6a4f;
+    --color-gold: #D4A017;
+    --color-cream: #F9F5F0;
+    --color-charcoal: #2D3748;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', 'Noto Sans Kannada', system-ui, sans-serif;
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .kannada {
+    font-family: 'Noto Sans Kannada', sans-serif;
+  }
+}
+
+@layer components {
+  /* Price number styling */
+  .price-number {
+    @apply font-mono font-bold tabular-nums;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Card styles */
+  .ap-card {
+    @apply bg-white rounded-xl shadow-card border border-forest-50;
+  }
+
+  .ap-card-hover {
+    @apply ap-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply bg-forest-900 text-white font-semibold px-6 py-3 rounded-lg
+           hover:bg-forest-800 active:bg-forest-950
+           transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-forest-400 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-forest-900 font-semibold px-6 py-3 rounded-lg border-2 border-forest-900
+           hover:bg-forest-50 transition-all duration-150
+           focus:outline-none focus:ring-2 focus:ring-forest-400 focus:ring-offset-2;
+  }
+
+  .btn-gold {
+    @apply bg-gold-500 text-white font-semibold px-6 py-3 rounded-lg
+           hover:bg-gold-600 transition-all duration-150
+           focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-offset-2;
+  }
+
+  /* Input styles */
+  .ap-input {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-200 bg-white
+           text-charcoal placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-forest-400 focus:border-transparent
+           transition-all duration-150;
+  }
+
+  /* MSP Badge */
+  .msp-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold
+           bg-gold-100 text-gold-700 border border-gold-200;
+  }
+
+  /* Price change indicators */
+  .price-up {
+    @apply text-green-600 bg-green-50 px-2 py-0.5 rounded text-sm font-semibold;
+  }
+
+  .price-down {
+    @apply text-red-600 bg-red-50 px-2 py-0.5 rounded text-sm font-semibold;
+  }
+
+  /* Recommendation chips */
+  .rec-sell { @apply bg-green-100 text-green-800 border-green-200; }
+  .rec-hold { @apply bg-amber-100 text-amber-800 border-amber-200; }
+  .rec-wait { @apply bg-blue-100 text-blue-800 border-blue-200; }
+  .rec-govt { @apply bg-purple-100 text-purple-800 border-purple-200; }
+}
+
+/* Price Ticker Animation */
+.ticker-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: inline-block;
+  animation: ticker 40s linear infinite;
+}
+
+.ticker-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Leaflet map override */
+.leaflet-container {
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f0fdf4; }
+::-webkit-scrollbar-thumb { background: #2d6a4f; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #1B4332; }

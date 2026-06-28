@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+*.egg
+.pytest_cache/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.cache/
+
+# Environment
+.env
+*.env.local
+*.env.production
+
+# ML Models (large files — store with DVC or S3)
+ml/models/*.joblib
+ml/models/*.pkl
+ml/models/*.bin
+
+# Database
+*.sqlite
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+logs/
+
+# Docker
+.dockerignore

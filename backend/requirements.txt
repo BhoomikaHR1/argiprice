@@ -1,0 +1,51 @@
+# AgriPrice Backend — FastAPI + ML Stack
+# Python 3.11+
+
+# === Web Framework ===
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+python-multipart==0.0.9
+httpx==0.27.0
+
+# === Database ===
+sqlalchemy==2.0.27
+asyncpg==0.29.0
+alembic==1.13.1
+psycopg2-binary==2.9.9
+
+# === Auth & Security ===
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.1
+
+# === Validation ===
+pydantic==2.6.1
+pydantic-settings==2.2.1
+email-validator==2.1.0
+
+# === Machine Learning ===
+xgboost==2.0.3
+scikit-learn==1.4.0
+pandas==2.2.0
+numpy==1.26.4
+joblib==1.3.2
+
+# === API Clients ===
+requests==2.31.0
+aiohttp==3.9.3
+
+# === Data & Utilities ===
+python-dateutil==2.8.2
+pytz==2024.1
+apscheduler==3.10.4
+
+# === Caching ===
+redis==5.0.1
+
+# === Logging & Monitoring ===
+loguru==0.7.2
+
+# === Testing ===
+pytest==8.0.1
+pytest-asyncio==0.23.5
+httpx==0.27.0
