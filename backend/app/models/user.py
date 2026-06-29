@@ -1,4 +1,7 @@
+import uuid
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
@@ -22,17 +25,19 @@ class District(Base):
 class User(Base):
     __tablename__ = "users"
 
-    id             = Column(Integer, primary_key=True, index=True)
+    id             = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     full_name      = Column(String(120), nullable=False)
     phone          = Column(String(15), unique=True, nullable=True, index=True)
     email          = Column(String(200), unique=True, nullable=True, index=True)
     password_hash  = Column(String(255), nullable=False)
     preferred_lang = Column(String(5), default="en")
     district_id    = Column(Integer, ForeignKey("districts.id"), nullable=True)
+    taluk_id       = Column(Integer, nullable=True)
     is_active      = Column(Boolean, default=True)
-    is_admin       = Column(Boolean, default=False)
+    is_verified    = Column(Boolean, default=False)
+    role           = Column(String(20), default="farmer")
     created_at     = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at     = Column(DateTime(timezone=True), onupdate=func.now())
+    updated_at     = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     district      = relationship("District", back_populates="users")
     saved_crops   = relationship("UserSavedCrop", back_populates="user", cascade="all, delete-orphan")
@@ -42,10 +47,9 @@ class User(Base):
 class UserSavedCrop(Base):
     __tablename__ = "user_saved_crops"
 
-    id         = Column(Integer, primary_key=True)
-    user_id    = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id    = Column(UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True, nullable=False)
     crop_id    = Column(Integer, ForeignKey("crops.id"), nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    added_at   = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="saved_crops")
 
@@ -54,9 +58,12 @@ class UserNotification(Base):
     __tablename__ = "user_notifications"
 
     id         = Column(Integer, primary_key=True)
-    user_id    = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id    = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    title_en   = Column(String(300))
+    title_kn   = Column(String(300))
+    body_en    = Column(String)
+    body_kn    = Column(String)
     type       = Column(String(30))
-    message    = Column(String(500))
     is_read    = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

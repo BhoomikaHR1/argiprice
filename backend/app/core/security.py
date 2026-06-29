@@ -10,7 +10,9 @@ from sqlalchemy import select
 from app.core.config import settings
 from app.core.database import get_db
 
-pwd_context   = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Use pbkdf2_sha256 for new hashes so registration works reliably in this
+# environment, while still accepting any legacy bcrypt hashes on login.
+pwd_context   = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
@@ -59,8 +61,7 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    # sub is stored as str, convert to int for DB
-    result = await db.execute(select(User).where(User.id == int(user_id)))
+    result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user or not user.is_active:
         raise credentials_exception

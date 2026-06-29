@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, Filter, Star, ShieldCheck, Leaf } from 'lucide-react'
 
-const CATEGORIES = [
+export const CATEGORIES = [
   { id: 'all', label: 'All Crops', label_kn: 'ಎಲ್ಲಾ ಬೆಳೆ', icon: '🌱' },
   { id: 'cereals', label: 'Cereals & Millets', label_kn: 'ಧಾನ್ಯಗಳು', icon: '🌾' },
   { id: 'pulses', label: 'Pulses', label_kn: 'ದ್ವಿದಳ', icon: '🫘' },
@@ -14,7 +14,7 @@ const CATEGORIES = [
   { id: 'fibres', label: 'Fibres', label_kn: 'ನಾರು ಬೆಳೆ', icon: '🧵' },
 ]
 
-const ALL_CROPS = [
+export const ALL_CROPS = [
   // Cereals
   { id:1,  cat:'cereals',    emoji:'🌾', name:'Rice (Paddy)',    name_kn:'ಭತ್ತ',              scientific:'Oryza sativa',              has_msp:true,  msp:2300,  price:2380, season:'Kharif', shelf:365 },
   { id:2,  cat:'cereals',    emoji:'🌾', name:'Ragi',            name_kn:'ರಾಗಿ',              scientific:'Eleusine coracana',          has_msp:true,  msp:3846,  price:3920, season:'Kharif/Rabi', shelf:365 },

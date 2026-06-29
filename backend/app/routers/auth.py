@@ -129,7 +129,7 @@ async def refresh_token(refresh_token: str = Query(...), db: AsyncSession = Depe
     except (JWTError, KeyError):
         raise HTTPException(401, "Invalid or expired refresh token")
 
-    result = await db.execute(select(User).where(User.id == int(user_id)))
+    result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user or not user.is_active:
         raise HTTPException(401, "User not found")
