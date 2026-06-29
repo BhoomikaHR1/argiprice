@@ -10,7 +10,7 @@ from app.core.database import engine, Base
 
 # FIX: Import ALL models here so Base.metadata knows about every table
 # before create_all runs. Without this District & Crop tables are missing.
-from app.models.user import User, District, UserSavedCrop, UserNotification  # noqa: F401
+from app.models.user import User, District, UserSavedCrop, UserNotification, JointCommunityEntry  # noqa: F401
 from app.models.crop import Crop
 from app.routers import auth, crops, prices, markets, predictions, weather, schemes, users
 

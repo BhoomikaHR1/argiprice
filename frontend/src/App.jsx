@@ -17,6 +17,7 @@ import MarketTrendsPage from './pages/MarketTrendsPage'
 import AIPredictionPage from './pages/AIPredictionPage'
 import WeatherPage from './pages/WeatherPage'
 import FarmerInfoPage from './pages/FarmerInfoPage'
+import JointCommunityPage from './pages/JointCommunityPage'
 import GovernmentSchemesPage from './pages/GovernmentSchemesPage'
 import MSPPage from './pages/MSPPage'
 import HelpCenterPage from './pages/HelpCenterPage'
@@ -47,6 +48,7 @@ export default function App() {
       <Route path="/market-trends" element={<Layout><MarketTrendsPage /></Layout>} />
       <Route path="/weather" element={<Layout><WeatherPage /></Layout>} />
       <Route path="/farmer-info" element={<Layout><FarmerInfoPage /></Layout>} />
+      <Route path="/joint-community" element={<ProtectedRoute><Layout><JointCommunityPage /></Layout></ProtectedRoute>} />
       <Route path="/government-schemes" element={<Layout><GovernmentSchemesPage /></Layout>} />
       <Route path="/msp" element={<Layout><MSPPage /></Layout>} />
 

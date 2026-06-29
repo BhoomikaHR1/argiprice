@@ -240,6 +240,20 @@ CREATE TABLE user_notifications (
     created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE joint_community_entries (
+    id            BIGSERIAL PRIMARY KEY,
+    user_id       UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    crop_id       INTEGER NOT NULL REFERENCES crops(id),
+    quantity      DECIMAL(12,2) NOT NULL,
+    unit          VARCHAR(20) NOT NULL,
+    quantity_kg   INTEGER NOT NULL,
+    village_name  VARCHAR(255) NOT NULL,
+    created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_joint_community_crop ON joint_community_entries(crop_id);
+CREATE INDEX idx_joint_community_user ON joint_community_entries(user_id);
+
 CREATE TABLE price_alerts (
     id              BIGSERIAL PRIMARY KEY,
     user_id         UUID REFERENCES users(id) ON DELETE CASCADE,

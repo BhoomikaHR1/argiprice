@@ -89,6 +89,11 @@ export const userApi = {
   notifications: () => api.get('/users/me/notifications'),
 }
 
+export const jointCommunityApi = {
+  list: () => api.get('/users/me/joint-community'),
+  create: (data) => api.post('/users/me/joint-community', data),
+}
+
 // Auth APIs
 export const authApi = {
   login: (data) => api.post('/auth/login', data),

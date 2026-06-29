@@ -1,27 +1,33 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, Leaf, ChevronDown, LogOut, User, Bell, Globe } from 'lucide-react'
-import { useAuthStore } from '../../context/authStore'
 import clsx from 'clsx'
+
+import { useAuthStore } from '../../context/authStore'
 
 const NAV_LINKS = [
   { label: 'Live Prices', label_kn: 'ಲೈವ್ ಬೆಲೆ', href: '/live-prices' },
   { label: 'AI Prediction', label_kn: 'AI ಮುನ್ಸೂಚನೆ', href: '/ai-prediction' },
   {
-    label: 'Markets', label_kn: 'ಮಾರುಕಟ್ಟೆ', href: '#',
+    label: 'Markets',
+    label_kn: 'ಮಾರುಕಟ್ಟೆ',
+    href: '#',
     children: [
       { label: 'APMC Markets', href: '/apmc-markets' },
       { label: 'Market Trends', href: '/market-trends' },
-    ]
+    ],
   },
+  { label: 'Joint Community', label_kn: 'ಸಂಯುಕ್ತ ಸಮುದಾಯ', href: '/joint-community' },
   {
-    label: 'Information', label_kn: 'ಮಾಹಿತಿ', href: '#',
+    label: 'Information',
+    label_kn: 'ಮಾಹಿತಿ',
+    href: '#',
     children: [
       { label: 'Crops Database', href: '/crops' },
       { label: 'Farmer Information', href: '/farmer-info' },
       { label: 'Government Schemes', href: '/government-schemes' },
       { label: 'MSP Prices', href: '/msp' },
-    ]
+    ],
   },
   { label: 'Weather', label_kn: 'ಹವಾಮಾನ', href: '/weather' },
   { label: 'About', label_kn: 'ನಮ್ಮ ಬಗ್ಗೆ', href: '/about' },
@@ -29,7 +35,6 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState(null)
   const { isAuthenticated, user, logout, lang, setLang } = useAuthStore()
   const location = useLocation()
   const navigate = useNavigate()
@@ -43,10 +48,8 @@ export default function Navbar() {
 
   return (
     <nav className="bg-forest-900 text-white sticky top-0 z-50 shadow-lg">
-      {/* Main nav row */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-9 h-9 bg-gold-500 rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
               <Leaf className="w-5 h-5 text-white" />
@@ -57,25 +60,16 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop nav links */}
           <div className="hidden lg:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <div key={link.label} className="relative group">
                 {link.children ? (
                   <>
-                    <button
-                      className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-forest-100 hover:text-white hover:bg-forest-800 transition-colors"
-                      onMouseEnter={() => setOpenDropdown(link.label)}
-                      onMouseLeave={() => setOpenDropdown(null)}
-                    >
+                    <button className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-forest-100 hover:text-white hover:bg-forest-800 transition-colors">
                       {lang === 'kn' ? link.label_kn : link.label}
                       <ChevronDown className="w-3.5 h-3.5" />
                     </button>
-                    <div
-                      className="absolute top-full left-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-forest-100 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150"
-                      onMouseEnter={() => setOpenDropdown(link.label)}
-                      onMouseLeave={() => setOpenDropdown(null)}
-                    >
+                    <div className="absolute top-full left-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-forest-100 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
                       {link.children.map((child) => (
                         <Link
                           key={child.href}
@@ -91,10 +85,10 @@ export default function Navbar() {
                   <Link
                     to={link.href}
                     className={clsx(
-                      "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                      'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                       location.pathname === link.href
-                        ? "text-white bg-forest-700"
-                        : "text-forest-100 hover:text-white hover:bg-forest-800"
+                        ? 'text-white bg-forest-700'
+                        : 'text-forest-100 hover:text-white hover:bg-forest-800'
                     )}
                   >
                     {lang === 'kn' ? link.label_kn : link.label}
@@ -104,9 +98,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Right side actions */}
           <div className="flex items-center gap-2">
-            {/* Language toggle */}
             <button
               onClick={toggleLang}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-forest-800 hover:bg-forest-700 text-forest-100 hover:text-white text-sm font-medium transition-colors"
@@ -118,13 +110,11 @@ export default function Navbar() {
 
             {isAuthenticated ? (
               <>
-                {/* Notifications */}
                 <Link to="/dashboard" className="p-2 rounded-lg hover:bg-forest-800 transition-colors relative">
                   <Bell className="w-5 h-5 text-forest-100" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-gold-500 rounded-full"></span>
                 </Link>
 
-                {/* Profile dropdown */}
                 <div className="relative group">
                   <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-forest-800 hover:bg-forest-700 transition-colors">
                     <div className="w-7 h-7 bg-gold-500 rounded-full flex items-center justify-center text-sm font-bold">
@@ -158,7 +148,6 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* Mobile hamburger */}
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-forest-800 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -169,7 +158,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="lg:hidden bg-forest-950 border-t border-forest-800">
           <div className="px-4 py-4 space-y-1">

@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -42,6 +42,7 @@ class User(Base):
     district      = relationship("District", back_populates="users")
     saved_crops   = relationship("UserSavedCrop", back_populates="user", cascade="all, delete-orphan")
     notifications = relationship("UserNotification", back_populates="user", cascade="all, delete-orphan")
+    joint_community_entries = relationship("JointCommunityEntry", back_populates="user", cascade="all, delete-orphan")
 
 
 class UserSavedCrop(Base):
@@ -68,3 +69,18 @@ class UserNotification(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="notifications")
+
+
+class JointCommunityEntry(Base):
+    __tablename__ = "joint_community_entries"
+
+    id            = Column(Integer, primary_key=True, index=True)
+    user_id       = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    crop_id       = Column(Integer, ForeignKey("crops.id"), nullable=False, index=True)
+    quantity      = Column(Float, nullable=False)
+    unit          = Column(String(20), nullable=False)
+    quantity_kg   = Column(Integer, nullable=False)
+    village_name  = Column(String(255), nullable=False)
+    created_at    = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", back_populates="joint_community_entries")

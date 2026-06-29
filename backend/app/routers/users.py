@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text, select
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, Field
+from typing import Literal, Optional
 
 from app.core.database import get_db
 from app.core.security import get_current_user, hash_password
-from app.models.user import User, UserSavedCrop, UserNotification
+from app.models.user import User, UserSavedCrop, UserNotification, JointCommunityEntry
 
 router = APIRouter()
 
@@ -16,6 +16,20 @@ class UpdateProfileRequest(BaseModel):
     preferred_lang: Optional[str] = None
     district_id: Optional[int] = None
     password: Optional[str] = None
+
+
+class JointCommunityCreateRequest(BaseModel):
+    crop_id: int
+    quantity: float = Field(..., gt=0)
+    unit: Literal["kg", "quintal", "tonne"]
+    village_name: str = Field(..., min_length=2, max_length=255)
+
+
+UNIT_TO_KG = {
+    "kg": 1,
+    "quintal": 100,
+    "tonne": 1000,
+}
 
 
 @router.get("/me")
@@ -50,6 +64,87 @@ async def update_profile(
     await db.commit()
     await db.refresh(user)
     return {"message": "Profile updated", "user": {"full_name": user.full_name, "preferred_lang": user.preferred_lang}}
+
+
+@router.get("/me/joint-community")
+async def get_joint_community(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    rows = await db.execute(text("""
+        SELECT
+            jce.id,
+            jce.user_id,
+            jce.crop_id,
+            jce.quantity,
+            jce.unit,
+            jce.quantity_kg,
+            jce.village_name,
+            jce.created_at,
+            u.full_name AS farmer_name,
+            c.name_en AS crop_name,
+            c.name_kn AS crop_name_kn
+        FROM joint_community_entries jce
+        JOIN users u ON u.id = jce.user_id
+        JOIN crops c ON c.id = jce.crop_id
+        ORDER BY jce.created_at DESC
+    """))
+    entries = []
+    for row in rows.mappings().all():
+        entries.append({
+            "id": row["id"],
+            "user_id": str(row["user_id"]),
+            "crop_id": row["crop_id"],
+            "quantity": float(row["quantity"]),
+            "unit": row["unit"],
+            "quantity_kg": row["quantity_kg"],
+            "village_name": row["village_name"],
+            "created_at": row["created_at"].isoformat() if row["created_at"] else None,
+            "farmer_name": row["farmer_name"],
+            "crop_name": row["crop_name"],
+            "crop_name_kn": row["crop_name_kn"],
+            "is_current_user": str(row["user_id"]) == str(user.id),
+        })
+
+    return {"entries": entries}
+
+
+@router.post("/me/joint-community", status_code=201)
+async def create_joint_community_entry(
+    body: JointCommunityCreateRequest,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    crop = await db.execute(text("SELECT id FROM crops WHERE id = :id"), {"id": body.crop_id})
+    if crop.scalar_one_or_none() is None:
+        raise HTTPException(404, "Crop not found")
+
+    entry = JointCommunityEntry(
+        user_id=user.id,
+        crop_id=body.crop_id,
+        quantity=body.quantity,
+        unit=body.unit,
+        quantity_kg=int(round(body.quantity * UNIT_TO_KG[body.unit])),
+        village_name=body.village_name.strip(),
+    )
+    db.add(entry)
+    await db.commit()
+    await db.refresh(entry)
+
+    return {
+        "message": "Joined crop community successfully",
+        "entry": {
+            "id": entry.id,
+            "user_id": str(entry.user_id),
+            "crop_id": entry.crop_id,
+            "quantity": entry.quantity,
+            "unit": entry.unit,
+            "quantity_kg": entry.quantity_kg,
+            "village_name": entry.village_name,
+            "created_at": entry.created_at.isoformat() if entry.created_at else None,
+            "farmer_name": user.full_name,
+        },
+    }
 
 
 @router.get("/me/saved-crops")

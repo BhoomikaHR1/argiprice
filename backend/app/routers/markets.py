@@ -25,7 +25,7 @@ async def list_markets(
     db: AsyncSession = Depends(get_db),
 ):
     q = """
-        SELECT am.*, d.name AS district_name
+        SELECT am.*, d.name_en AS district_name
         FROM apmc_markets am
         LEFT JOIN districts d ON am.district_id = d.id
         WHERE 1=1
@@ -52,15 +52,15 @@ async def nearest_markets(
 ):
     """Return markets sorted by distance from user's GPS location."""
     result = await db.execute(text("""
-        SELECT am.*, d.name AS district_name
+        SELECT am.*, d.name_en AS district_name
         FROM apmc_markets am
         LEFT JOIN districts d ON am.district_id = d.id
-        WHERE am.lat IS NOT NULL AND am.lng IS NOT NULL
+        WHERE am.latitude IS NOT NULL AND am.longitude IS NOT NULL
     """))
     markets = [dict(r) for r in result.mappings().all()]
 
     for m in markets:
-        m["distance_km"] = round(haversine_km(lat, lng, float(m["lat"]), float(m["lng"])), 1)
+        m["distance_km"] = round(haversine_km(lat, lng, float(m["latitude"]), float(m["longitude"])), 1)
 
     markets.sort(key=lambda m: m["distance_km"])
     return markets[:limit]
@@ -69,7 +69,7 @@ async def nearest_markets(
 @router.get("/{market_id}")
 async def get_market(market_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(text("""
-        SELECT am.*, d.name AS district_name
+        SELECT am.*, d.name_en AS district_name
         FROM apmc_markets am
         LEFT JOIN districts d ON am.district_id = d.id
         WHERE am.id = :id
