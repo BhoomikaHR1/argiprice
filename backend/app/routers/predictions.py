@@ -11,7 +11,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.security import get_current_user
+from app.core.security import get_current_user_optional
 from app.models.user import User
 
 router = APIRouter()
@@ -215,7 +215,7 @@ async def get_recommendation(
     crop_id: int = Query(...),
     apmc_id: int = Query(...),
     quantity_tonnes: float = Query(1.0, ge=0.1, le=500),
-    user: User = Depends(get_current_user),
+    user: Optional[User] = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
 ):
     crop_result = await db.execute(text("SELECT * FROM crops WHERE id = :id"), {"id": crop_id})

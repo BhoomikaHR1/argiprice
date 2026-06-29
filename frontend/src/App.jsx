@@ -54,7 +54,7 @@ export default function App() {
 
       {/* Protected routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Layout><DashboardPage /></Layout></ProtectedRoute>} />
-      <Route path="/ai-prediction" element={<ProtectedRoute><Layout><AIPredictionPage /></Layout></ProtectedRoute>} />
+      <Route path="/ai-prediction" element={<Layout><AIPredictionPage /></Layout>} />
       <Route path="/profile" element={<ProtectedRoute><Layout><ProfilePage /></Layout></ProtectedRoute>} />
 
       {/* Fallback */}

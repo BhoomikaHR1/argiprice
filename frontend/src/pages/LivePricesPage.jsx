@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import { Search, TrendingUp, TrendingDown, MapPin, RefreshCw } from 'lucide-react'
 
 // FIX: Expanded from 15 to 32 crops covering ALL 31 Karnataka districts
@@ -185,7 +184,7 @@ export default function LivePricesPage() {
                 {filtered.map(p => (
                   <tr key={p.id} className="hover:bg-forest-50/50 transition-colors">
                     <td className="py-3 px-4">
-                      <Link to={`/crops/${p.id}`} className="flex items-center gap-3">
+                      <div className="flex items-center gap-3">
                         <span className="text-2xl">{p.emoji}</span>
                         <div>
                           <div className="flex items-center gap-2">
@@ -194,7 +193,7 @@ export default function LivePricesPage() {
                           </div>
                           <div className="text-xs text-gray-400 kannada">{p.crop_kn}</div>
                         </div>
-                      </Link>
+                      </div>
                     </td>
                     <td className="py-3 px-4">
                       <div className="text-sm text-charcoal">{p.market}</div>
@@ -235,7 +234,7 @@ export default function LivePricesPage() {
       {viewMode === 'cards' && (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filtered.map(p => (
-            <Link key={p.id} to={`/crops/${p.id}`} className="ap-card-hover p-5">
+            <div key={p.id} className="ap-card p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-forest-50 rounded-xl flex items-center justify-center text-2xl">{p.emoji}</div>
@@ -259,8 +258,8 @@ export default function LivePricesPage() {
                   MSP ₹{p.msp_price.toLocaleString()} • {p.modal >= p.msp_price ? `₹${(p.modal - p.msp_price).toLocaleString()} above ✓` : 'Below MSP ⚠️'}
                 </div>
               )}
-            </Link>
-          ))}
+              </div>
+            ))}
           {filtered.length === 0 && (
             <div className="col-span-full text-center py-16 text-gray-400">
               <div className="text-4xl mb-3">🔍</div>
