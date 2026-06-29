@@ -39,6 +39,8 @@ export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const isActiveLink = (href) => location.pathname === href
+
   const handleLogout = () => {
     logout()
     navigate('/')
@@ -65,7 +67,7 @@ export default function Navbar() {
               <div key={link.label} className="relative group">
                 {link.children ? (
                   <>
-                    <button className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-forest-100 hover:text-white hover:bg-forest-800 transition-colors">
+                    <button className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-forest-100 hover:text-white transition-colors">
                       {lang === 'kn' ? link.label_kn : link.label}
                       <ChevronDown className="w-3.5 h-3.5" />
                     </button>
@@ -85,13 +87,14 @@ export default function Navbar() {
                   <Link
                     to={link.href}
                     className={clsx(
-                      'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                      location.pathname === link.href
-                        ? 'text-white bg-forest-700'
-                        : 'text-forest-100 hover:text-white hover:bg-forest-800'
+                      'relative px-3 py-2 text-sm font-medium transition-colors',
+                      isActiveLink(link.href) ? 'text-white' : 'text-forest-100 hover:text-white'
                     )}
                   >
                     {lang === 'kn' ? link.label_kn : link.label}
+                    {isActiveLink(link.href) && (
+                      <span className="absolute left-3 right-3 -bottom-1 h-0.5 rounded-full bg-gold-400" />
+                    )}
                   </Link>
                 )}
               </div>
@@ -183,7 +186,12 @@ export default function Navbar() {
                   <Link
                     to={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 text-sm text-forest-100 hover:text-white hover:bg-forest-800 rounded-lg transition-colors"
+                    className={clsx(
+                      'block px-3 py-2 text-sm rounded-lg transition-colors',
+                      isActiveLink(link.href)
+                        ? 'text-white bg-forest-800'
+                        : 'text-forest-100 hover:text-white hover:bg-forest-800'
+                    )}
                   >
                     {lang === 'kn' ? link.label_kn : link.label}
                   </Link>
