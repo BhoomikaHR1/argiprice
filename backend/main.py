@@ -7,17 +7,20 @@ from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.core.database import engine, Base
+
+# FIX: Import ALL models here so Base.metadata knows about every table
+# before create_all runs. Without this District & Crop tables are missing.
+from app.models.user import User, District, UserSavedCrop, UserNotification  # noqa: F401
+
 from app.routers import auth, crops, prices, markets, predictions, weather, schemes, users
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: create tables (dev only — use Alembic in production)
-    if settings.APP_ENV == "development":
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
+    # Startup: create all tables (District is now included)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
-    # Shutdown
     await engine.dispose()
 
 
@@ -30,7 +33,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -39,7 +41,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers
 app.include_router(auth.router,        prefix="/api/auth",        tags=["auth"])
 app.include_router(crops.router,       prefix="/api/crops",       tags=["crops"])
 app.include_router(prices.router,      prefix="/api/prices",      tags=["prices"])

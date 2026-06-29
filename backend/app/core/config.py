@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     AGMARKNET_API_KEY: str = ""          # data.gov.in API key
 
     # CORS
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173"]
+    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173", "https://agriprice-frontend.onrender.com"]
 
     class Config:
         env_file = ".env"
