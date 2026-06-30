@@ -100,4 +100,10 @@ export const authApi = {
   register: (data) => api.post('/auth/register', data),
 }
 
+// Chatbot APIs
+export const chatApi = {
+  send: (message, history = []) =>
+    api.post('/chatbot/chat', { message, history }, { timeout: 60000 }),
+}
+
 export default api

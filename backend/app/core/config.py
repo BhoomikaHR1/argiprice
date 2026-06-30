@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     OPENWEATHER_API_KEY: str = ""
     AGMARKNET_API_KEY: str = ""          # data.gov.in API key
 
+    # RAG Chatbot
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    CHROMA_DIR: str = "./chroma_store"
+    RAG_TOP_K: int = 5
+
     # CORS
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173", "https://agriprice-frontend.onrender.com"]
 

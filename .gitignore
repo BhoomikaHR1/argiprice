@@ -27,6 +27,10 @@ ml/models/*.bin
 *.sqlite
 *.db
 
+# RAG vector store
+chroma_store/
+backend/chroma_store/
+
 # OS
 .DS_Store
 Thumbs.db
