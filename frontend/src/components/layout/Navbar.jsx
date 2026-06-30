@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, X, Leaf, ChevronDown, LogOut, User, Bell, Globe } from 'lucide-react'
+import { Menu, X, Leaf, ChevronDown, LogOut, User, Bell } from 'lucide-react'
 import clsx from 'clsx'
 
 import { useAuthStore } from '../../context/authStore'
@@ -35,7 +35,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { isAuthenticated, user, logout, lang, setLang } = useAuthStore()
+  const { isAuthenticated, user, logout } = useAuthStore()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -45,8 +45,6 @@ export default function Navbar() {
     logout()
     navigate('/')
   }
-
-  const toggleLang = () => setLang(lang === 'en' ? 'kn' : 'en')
 
   return (
     <nav className="bg-forest-900 text-white sticky top-0 z-50 shadow-lg">
@@ -68,7 +66,7 @@ export default function Navbar() {
                 {link.children ? (
                   <>
                     <button className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-forest-100 hover:text-white transition-colors">
-                      {lang === 'kn' ? link.label_kn : link.label}
+                      {link.label}
                       <ChevronDown className="w-3.5 h-3.5" />
                     </button>
                     <div className="absolute top-full left-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-forest-100 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
@@ -91,7 +89,7 @@ export default function Navbar() {
                       isActiveLink(link.href) ? 'text-white' : 'text-forest-100 hover:text-white'
                     )}
                   >
-                    {lang === 'kn' ? link.label_kn : link.label}
+                    {link.label}
                     {isActiveLink(link.href) && (
                       <span className="absolute left-3 right-3 -bottom-1 h-0.5 rounded-full bg-gold-400" />
                     )}
@@ -102,15 +100,6 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-forest-800 hover:bg-forest-700 text-forest-100 hover:text-white text-sm font-medium transition-colors"
-              title="Toggle language"
-            >
-              <Globe className="w-4 h-4" />
-              <span>{lang === 'en' ? 'ಕನ್ನಡ' : 'EN'}</span>
-            </button>
-
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="p-2 rounded-lg hover:bg-forest-800 transition-colors relative">
@@ -169,7 +158,7 @@ export default function Navbar() {
                 {link.children ? (
                   <>
                     <div className="px-3 py-2 text-xs font-semibold text-forest-400 uppercase tracking-wider">
-                      {lang === 'kn' ? link.label_kn : link.label}
+                      {link.label}
                     </div>
                     {link.children.map((child) => (
                       <Link
@@ -193,7 +182,7 @@ export default function Navbar() {
                         : 'text-forest-100 hover:text-white hover:bg-forest-800'
                     )}
                   >
-                    {lang === 'kn' ? link.label_kn : link.label}
+                    {link.label}
                   </Link>
                 )}
               </div>
